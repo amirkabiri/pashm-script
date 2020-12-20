@@ -1,5 +1,5 @@
 from typing import List
-from .expression import Expression
+from compiler.grammar.expression import Expression
 
 
 def unique_expressions(expressions: List[Expression]):

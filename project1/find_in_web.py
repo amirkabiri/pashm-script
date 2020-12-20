@@ -1,8 +1,7 @@
 from compiler.project1.engine import build_email_fa, build_url_fa
-from compiler.fa.dfa_runner import DFARunner
-from urllib.request import Request, urlopen
+from compiler.fa.multi_dfa_runner import MultiDFARunner
+import requests
 import time
-import gzip
 
 print('strict mode will find fewer urls but most of urls will be a real url')
 print('if you disable strict mode, the count of urls found will be more, but it is possible a few of them be incorrect')
@@ -11,23 +10,26 @@ print('strict mode: ', url_strict_mode)
 url_fa = build_url_fa(url_strict_mode)
 email_fa = build_email_fa()
 
-# queue = [input('enter an entry website url: ')]
-queue = ["https://www.digikala.com/"]
+queue = [input('enter an entry website url: ')]
 visited = dict()
-i = 0
+count = 0
 
 
-def on_email_match(string, index):
-    global i
-    i += 1
-    print(str(i) + ') email: ' + str(string) + '    index: ' + str(index))
+def on_match(result, index):
+    global count
 
+    for i in result:
+        if i == 1:
+            queue.append(result[i])
 
-def on_url_match(string, index):
-    global i
-    i += 1
-    queue.append(string)
-    print(str(i) + ') url: ' + str(string) + '    index: ' + str(index))
+        count += 1
+        print(count, end=') ')
+        print('email' if i == 0 else 'url', end='')
+        print(': ' + str(result[i]) + ' - index: ' + str(index))
+
+    r = [len(value) for value in result.values()]
+
+    return max(r)
 
 
 while len(queue):
@@ -39,21 +41,17 @@ while len(queue):
     print(f"========== crawling { target } ==========")
 
     try:
-        req = Request(target)
-        # req.add_header('User-Agent', 'Mozilla/5.0')
-        req.add_header('User-Agent', "AKDEV'S WEB CRAWLER (http://akdev.ir)")
-        # content = urlopen(req).read().decode('utf-8')
-        content = gzip.decompress(urlopen(req).read()).decode('utf-8')
-
+        content = requests.get(target).text
         st = time.time()
-        emails = DFARunner.run(url_fa, content, None)
-        urls = DFARunner.run(email_fa, content, None)
-        print(time.time() - st)
-        print(emails)
-        print(urls)
-    except e:
-        print(e)
+
+        MultiDFARunner.run(
+            [email_fa, url_fa],
+            content,
+            on_match
+        )
+
+        print("execution time: " + str(time.time() - st))
+    except:
         print(f"========== failed to crawl { target } ==========")
 
-    break
     visited[target] = True

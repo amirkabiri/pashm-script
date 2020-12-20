@@ -1,10 +1,14 @@
-from compiler.fa.finite_automata_2 import FiniteAutomata
+from compiler.fa.finite_automata import FiniteAutomata
 
 
 class DFARunner:
     def __init__(self, fa: FiniteAutomata):
         self.fa = fa
         self.current = fa.start
+
+    def reset(self):
+        self.current = self.fa.start
+        return self
 
     def read(self, char: str):
         self.current = self.fa.table[self.current][char][0]
@@ -29,9 +33,9 @@ class DFARunner:
     def run(fa, input, on_match):
         matched = []
         i = 0
+        dfa_runner = DFARunner(fa)
 
         while i < len(input):
-            dfa_runner = DFARunner(fa)
             j = i
             found = ''
             accepted_string = ''
@@ -40,10 +44,6 @@ class DFARunner:
                 try:
                     dfa_runner.read(input[j])
                 except Exception:
-                    # print('stuck', [(found + input[j]).replace('\n', '/n'), accepted_string])
-                    # if input[j] == ':':
-                        # print(dfa_runner.current)
-                        # print('stuck', [(found + input[j]).replace('\n', '/n'), accepted_string])
                     break
 
                 found += (input[j])
@@ -59,6 +59,8 @@ class DFARunner:
                 matched.append([i, accepted_string])
                 i += len(accepted_string)
             else:
-                i += 1
+                i += len(found) or 1
+
+            dfa_runner.reset()
 
         return dict(matched)

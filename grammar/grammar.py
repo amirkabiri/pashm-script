@@ -1,6 +1,5 @@
-from compiler.expression import Variable, Terminal
-from compiler.statement import Statement
-from compiler.statements import Statements
+from compiler.grammar.expression import Variable, Terminal
+from compiler.grammar.statements import Statements
 
 
 class Grammar:

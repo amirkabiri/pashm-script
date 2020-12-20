@@ -1,5 +1,5 @@
 from compiler.char_set import CharSet
-from compiler.fa.finite_automata_2 import FiniteAutomata
+from compiler.fa.finite_automata import FiniteAutomata
 from compiler.fa.atom import State, Symbol
 
 
@@ -28,7 +28,7 @@ def build_email_fa():
 
 def build_url_fa(strict_mode=False):
     domain_sigma = CharSet().range(65, 91).range(97, 123).range(48, 58).char('-')
-    path_sigma = CharSet().range(65, 91).range(97, 123).range(48, 58).char('-').char('.')
+    path_sigma = CharSet().range(65, 91).range(97, 123).range(48, 58).char('-').char('.').char('_')
 
     transitions = [
         [State('1'), Symbol('h'), State('2')],

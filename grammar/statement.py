@@ -1,4 +1,4 @@
-from compiler.expression import Expression
+from compiler.grammar.expression import Expression
 from typing import Union, List
 
 

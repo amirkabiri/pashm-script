@@ -1,4 +1,4 @@
-from compiler.statement import Statement
+from compiler.grammar.statement import Statement
 from typing import Union, List
 
 

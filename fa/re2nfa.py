@@ -1,7 +1,6 @@
-from compiler.grammar import Grammar
-from compiler.expression import Variable, Terminal, Dollar
-from compiler.statement import Statement
-from json import dumps
+from compiler.grammar.grammar import Grammar
+from compiler.grammar.expression import Variable, Terminal, Dollar
+from compiler.grammar.statement import Statement
 from compiler.helpers import unique_expressions
 
 def tokenizer(regex):
