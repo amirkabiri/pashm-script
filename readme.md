@@ -14,3 +14,12 @@ then install dependencies (this project has just one dependency)
 
 `pip install requests`
 
+all project files exists in compiler/project1 directory.
+for running anyone of those files, act like this:
+
+`py -m compiler.project1.find_in_web`
+
+notice that when you are running above command, you must be in regex-engine directory
+
+# License
+what the fuck?
