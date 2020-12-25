@@ -2,11 +2,12 @@ from compiler.project1.engine import build_url_fa, build_email_fa
 from compiler.fa.multi_dfa_runner import MultiDFARunner
 import time
 
+
 print('strict mode will find fewer urls but most of urls will be a real url')
 print('if you disable strict mode, the count of urls found will be more, but it is possible a few of them be incorrect')
 url_strict_mode = input('do you want to enable strict mode? (y/n)') == 'y'
 print('strict mode: ', url_strict_mode)
-file = input('file path: ')
+file = input('full file path:')
 url_fa = build_url_fa(url_strict_mode)
 email_fa = build_email_fa()
 count = 0

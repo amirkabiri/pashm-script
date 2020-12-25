@@ -1,6 +1,5 @@
-from typing import Union, List
+from typing import List
 
-from compiler.char_set import CharSet
 from compiler.fa.atom import Symbol, State
 
 

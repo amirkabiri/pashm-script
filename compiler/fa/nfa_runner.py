@@ -1,5 +1,5 @@
 from compiler.fa.finite_automata import FiniteAutomata
-from compiler.fa.atom import Symbol, State
+from compiler.fa.atom import State
 
 
 class NFARunner:

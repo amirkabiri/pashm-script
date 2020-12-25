@@ -51,6 +51,9 @@ while len(queue):
         )
 
         print("execution time: " + str(time.time() - st))
+    except KeyboardInterrupt:
+        print('Good Bye =(')
+        break
     except:
         print(f"========== failed to crawl { target } ==========")
 

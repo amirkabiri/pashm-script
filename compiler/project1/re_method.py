@@ -48,6 +48,9 @@ else:
                 print_result(url[0])
             for email in email_re.findall(content):
                 print_result(email[0])
+        except KeyboardInterrupt:
+            print('Good Bye =(')
+            break
         except:
             print(f"========== failed to crawl {target} ==========")
 
