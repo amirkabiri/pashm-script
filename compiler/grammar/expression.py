@@ -11,6 +11,9 @@ class Expression(object):
     def is_lambda(self):
         return self.value == ''
 
+    def is_dollar(self):
+        return False
+
     def __eq__(self, other):
         return False
 
@@ -21,6 +24,14 @@ class Dollar(Expression):
 
     def is_dollar(self):
         return True
+
+    def __eq__(self, other):
+        return isinstance(other, Dollar) and self.value == other.value
+
+
+class Action(Expression):
+    def __init__(self, value: str):
+        super().__int__('@' + value)
 
     def __eq__(self, other):
         return isinstance(other, Dollar)
