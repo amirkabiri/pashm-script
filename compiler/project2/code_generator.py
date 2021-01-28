@@ -11,8 +11,8 @@ class Actions:
 
     def action_number(self, token):
         self.stack.append([
-            'temp',
-            self.add_temp(int(token['value']))
+            'const',
+            int(token['value'])
         ])
 
     def action_variable(self, token):
