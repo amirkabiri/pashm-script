@@ -29,6 +29,30 @@ def build_multiply_dfa():
     )
 
 
+def build_divide_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('/')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol('/'), State('1')],
+        ]
+    )
+
+
+def build_pow_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('^')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol('^'), State('1')],
+        ]
+    )
+
+
 def build_add_dfa():
     return FiniteAutomata(
         [State(str(i)) for i in range(2)],
@@ -37,6 +61,18 @@ def build_add_dfa():
         [State('1')],
         [
             [State('0'), Symbol('+'), State('1')],
+        ]
+    )
+
+
+def build_minus_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('-')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol('-'), State('1')],
         ]
     )
 
@@ -82,15 +118,150 @@ def build_variable_dfa():
 
 
 def build_number_dfa():
-    chars = CharSet().range(48, 58)
+    digits = CharSet().range(48, 58)
+
+    return FiniteAutomata(
+        [State(str(i)) for i in range(4)],
+        [Symbol(digits), Symbol('.')],
+        State('0'),
+        [State('1'), State('3')],
+        [
+            [State('0'), Symbol(digits), State('1')],
+            [State('1'), Symbol(digits), State('1')],
+            [State('1'), Symbol('.'), State('2')],
+            [State('2'), Symbol(digits), State('3')],
+            [State('3'), Symbol(digits), State('3')],
+        ]
+    )
+
+
+def build_open_brace_dfa():
     return FiniteAutomata(
         [State(str(i)) for i in range(2)],
-        [Symbol(chars)],
+        [Symbol('{')],
         State('0'),
         [State('1')],
         [
-            [State('0'), Symbol(chars), State('1')],
-            [State('1'), Symbol(chars), State('1')],
+            [State('0'), Symbol('{'), State('1')],
+        ]
+    )
+
+
+def build_close_brace_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('}')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol('}'), State('1')],
+        ]
+    )
+
+
+def build_params_delimiter_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol(',')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol(','), State('1')],
+        ]
+    )
+
+
+def build_function_dfa():
+    first_char = CharSet().range(65, 91).range(97, 123).char('_')
+    rest_chars = CharSet().range(65, 91).range(97, 123).range(48, 58).char('_')
+
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [Symbol(first_char), Symbol(rest_chars), Symbol('(')],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol(first_char), State('1')],
+            [State('1'), Symbol(rest_chars), State('1')],
+            [State('1'), Symbol('('), State('2')],
+        ]
+    )
+
+
+def build_while_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(6)],
+        [
+            Symbol('w'), Symbol('h'), Symbol('i'), Symbol('l'), Symbol('e')
+        ],
+        State('0'),
+        [State('5')],
+        [
+            [State('0'), Symbol('w'), State('1')],
+            [State('1'), Symbol('h'), State('2')],
+            [State('2'), Symbol('i'), State('3')],
+            [State('3'), Symbol('l'), State('4')],
+            [State('4'), Symbol('e'), State('5')],
+        ]
+    )
+
+
+def build_do_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [
+            Symbol('d'), Symbol('o')
+        ],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol('d'), State('1')],
+            [State('1'), Symbol('o'), State('2')],
+        ]
+    )
+
+
+def build_if_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [
+            Symbol('i'), Symbol('f')
+        ],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol('i'), State('1')],
+            [State('1'), Symbol('f'), State('2')],
+        ]
+    )
+
+
+def build_else_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(5)],
+        [
+            Symbol('e'), Symbol('l'), Symbol('s'), Symbol('e'),
+        ],
+        State('0'),
+        [State('4')],
+        [
+            [State('0'), Symbol('e'), State('1')],
+            [State('1'), Symbol('l'), State('2')],
+            [State('2'), Symbol('s'), State('3')],
+            [State('3'), Symbol('e'), State('4')],
+        ]
+    )
+
+
+def build_delimiter_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol("\n")],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol("\n"), State('1')],
+            [State('1'), Symbol("\n"), State('1')],
         ]
     )
 
@@ -98,20 +269,59 @@ def build_number_dfa():
 machines = [
     build_assign_dfa(),
     build_multiply_dfa(),
+    build_divide_dfa(),
+    build_pow_dfa(),
     build_add_dfa(),
-    build_open_par_dfa(),
-    build_close_par_dfa(),
+    build_minus_dfa(),
+
     build_variable_dfa(),
     build_number_dfa(),
+
+    build_open_brace_dfa(),
+    build_close_brace_dfa(),
+
+    build_open_par_dfa(),
+    build_close_par_dfa(),
+
+    build_delimiter_dfa(),
+
+    build_function_dfa(),
+    build_params_delimiter_dfa(),
+
+    build_while_dfa(),
+    build_do_dfa(),
+
+    build_if_dfa(),
+    build_else_dfa(),
 ]
+
 tokens = [
-    { "type": "operator" },
-    { "type": "operator" },
-    { "type": "operator" },
-    { "type": "par" },
-    { "type": "par" },
-    { "type": "variable" },
-    { "type": "number" },
+    {"type": "operator"},
+    {"type": "operator"},
+    {"type": "operator"},
+    {"type": "operator"},
+    {"type": "operator"},
+    {"type": "operator"},
+
+    {"type": "variable"},
+    {"type": "number"},
+
+    {"type": "brace"},
+    {"type": "brace"},
+
+    {"type": "par"},
+    {"type": "par"},
+
+    {"type": "delimiter"},
+
+    {"type": "function"},
+    {"type": "params_delimiter"},
+
+    {"type": "while"},
+    {"type": "do"},
+
+    {"type": "if"},
+    {"type": "else"},
 ]
 
 
@@ -120,11 +330,20 @@ def scanner(content):
 
     def on_match(result, index):
         nonlocal result_tokens
-        token = tokens[list(result.keys())[0]]
-        result_tokens.append({**token, "value": list(result.values())[0]})
 
-        r = [len(value) for value in result.values()]
-        return max(r)
+        sorted_by_len = sorted(result.items(), key=lambda x: len(x[1]), reverse=True)
+        [machine_index, matched_string] = sorted_by_len[0]
+        token = tokens[machine_index]
+
+        if token['type'] == 'function':
+            result_tokens.append({"type": "function", "value": matched_string[0:-2]})
+            result_tokens.append({"type": "par", "value": "("})
+        elif token['type'] == 'delimiter':
+            result_tokens.append({"type": "delimiter", "value": "\n"})
+        else:
+            result_tokens.append({**token, "value": matched_string})
+
+        return len(matched_string)
 
     MultiDFARunner.run(
         machines,
