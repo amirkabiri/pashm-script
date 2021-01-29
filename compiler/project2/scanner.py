@@ -256,72 +256,118 @@ def build_else_dfa():
 def build_delimiter_dfa():
     return FiniteAutomata(
         [State(str(i)) for i in range(2)],
-        [Symbol("\n")],
+        [Symbol(";")],
         State('0'),
         [State('1')],
         [
-            [State('0'), Symbol("\n"), State('1')],
-            [State('1'), Symbol("\n"), State('1')],
+            [State('0'), Symbol(";"), State('1')],
         ]
     )
 
 
 machines = [
-    build_assign_dfa(),
-    build_multiply_dfa(),
-    build_divide_dfa(),
-    build_pow_dfa(),
-    build_add_dfa(),
-    build_minus_dfa(),
+    {
+        "dfa": build_assign_dfa(),
+        "priority": 100,
+        "token": {"type": "operator"}
+    },
+    {
+        "dfa": build_multiply_dfa(),
+        "priority": 100,
+        "token": {"type": "operator"}
+    },
+    {
+        "dfa": build_divide_dfa(),
+        "priority": 100,
+        "token": {"type": "operator"}
+    },
+    {
+        "dfa": build_pow_dfa(),
+        "priority": 100,
+        "token": {"type": "operator"}
+    },
+    {
+        "dfa": build_add_dfa(),
+        "priority": 100,
+        "token": {"type": "operator"}
+    },
+    {
+        "dfa": build_minus_dfa(),
+        "priority": 100,
+        "token": {"type": "operator"}
+    },
 
-    build_variable_dfa(),
-    build_number_dfa(),
+    {
+        "dfa": build_variable_dfa(),
+        "priority": 40,
+        "token": {"type": "variable"}
+    },
+    {
+        "dfa": build_number_dfa(),
+        "priority": 40,
+        "token": {"type": "number"}
+    },
 
-    build_open_brace_dfa(),
-    build_close_brace_dfa(),
+    {
+        "dfa": build_open_brace_dfa(),
+        "priority": 100,
+        "token": {"type": "brace"}
+    },
+    {
+        "dfa": build_close_brace_dfa(),
+        "priority": 100,
+        "token": {"type": "brace"}
+    },
 
-    build_open_par_dfa(),
-    build_close_par_dfa(),
+    {
+        "dfa": build_open_par_dfa(),
+        "priority": 100,
+        "token": {"type": "par"}
+    },
+    {
+        "dfa": build_close_par_dfa(),
+        "priority": 100,
+        "token": {"type": "par"}
+    },
 
-    build_delimiter_dfa(),
+    {
+        "dfa": build_delimiter_dfa(),
+        "priority": 100,
+        "token": {"type": "delimiter"}
+    },
 
-    build_function_dfa(),
-    build_params_delimiter_dfa(),
+    {
+        "dfa": build_function_dfa(),
+        "priority": 60,
+        "token": {"type": "function"}
+    },
+    {
+        "dfa": build_params_delimiter_dfa(),
+        "priority": 100,
+        "token": {"type": "params_delimiter"}
+    },
 
-    build_while_dfa(),
-    build_do_dfa(),
+    {
+        "dfa": build_while_dfa(),
+        "priority": 80,
+        "token": {"type": "while"}
+    },
+    {
+        "dfa": build_do_dfa(),
+        "priority": 80,
+        "token": {"type": "do"}
+    },
 
-    build_if_dfa(),
-    build_else_dfa(),
-]
-
-tokens = [
-    {"type": "operator"},
-    {"type": "operator"},
-    {"type": "operator"},
-    {"type": "operator"},
-    {"type": "operator"},
-    {"type": "operator"},
-
-    {"type": "variable"},
-    {"type": "number"},
-
-    {"type": "brace"},
-    {"type": "brace"},
-
-    {"type": "par"},
-    {"type": "par"},
-
-    {"type": "delimiter"},
-
-    {"type": "function"},
-    {"type": "params_delimiter"},
-
-    {"type": "while"},
-    {"type": "do"},
-
-    {"type": "if"},
-    {"type": "else"},
+    {
+        "dfa": build_if_dfa(),
+        "priority": 80,
+        "token": {"type": "if"}
+    },
+    {
+        "dfa": build_else_dfa(),
+        "priority": 80,
+        "token": {"type": "else"}
+    },
 ]
 
 
@@ -331,9 +377,19 @@ def scanner(content):
     def on_match(result, index):
         nonlocal result_tokens
 
-        sorted_by_len = sorted(result.items(), key=lambda x: len(x[1]), reverse=True)
+        highest_priority = max([machines[machine_index]['priority'] for machine_index in result])
+        highest_machines = list(filter(
+            lambda item: highest_priority == machines[item[0]]['priority'],
+            result.items()
+        ))
+        sorted_by_len = list(sorted(
+            highest_machines,
+            key=lambda item: len(item[1]),
+            reverse=True
+        ))
+
         [machine_index, matched_string] = sorted_by_len[0]
-        token = tokens[machine_index]
+        token = machines[machine_index]['token']
 
         if token['type'] == 'function':
             result_tokens.append({"type": "function", "value": matched_string[0:-2]})
@@ -346,7 +402,7 @@ def scanner(content):
         return len(matched_string)
 
     MultiDFARunner.run(
-        machines,
+        [machine['dfa'] for machine in machines],
         content,
         on_match
     )
