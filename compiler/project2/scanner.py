@@ -338,7 +338,7 @@ machines = [
 
     {
         "dfa": build_function_dfa(),
-        "priority": 60,
+        "priority": 70,
         "token": {"type": "function"}
     },
     {
@@ -377,25 +377,42 @@ def scanner(content):
     def on_match(result, index):
         nonlocal result_tokens
 
-        highest_priority = max([machines[machine_index]['priority'] for machine_index in result])
-        highest_machines = list(filter(
-            lambda item: highest_priority == machines[item[0]]['priority'],
+        list_of_lengths = []
+        for machine_index in result:
+            if machines[machine_index]['token']['type'] == 'function':
+                list_of_lengths.append(len(result[machine_index]) - 1)
+            else:
+                list_of_lengths.append(len(result[machine_index]))
+
+        highest_length = max(list_of_lengths)
+        filter_by_len = list(filter(
+            lambda item: len(item[1]) == highest_length,
             result.items()
         ))
-        sorted_by_len = list(sorted(
-            highest_machines,
-            key=lambda item: len(item[1]),
+        sorted_by_priority = list(sorted(
+            filter_by_len,
+            key=lambda item: machines[item[0]]['priority'],
             reverse=True
         ))
 
-        [machine_index, matched_string] = sorted_by_len[0]
+
+        candidate = sorted_by_priority[0]
+        function_has_matched = list(filter(
+            lambda item: machines[item[0]]['token']['type'] == 'function',
+            result.items()
+        ))
+        if machines[candidate[0]]['token']['type'] == 'variable' and len(function_has_matched):
+            candidate = function_has_matched[0]
+
+
+        [machine_index, matched_string] = candidate
         token = machines[machine_index]['token']
 
         if token['type'] == 'function':
-            result_tokens.append({"type": "function", "value": matched_string[0:-2]})
+            result_tokens.append({"type": "function", "value": matched_string[0:-1]})
             result_tokens.append({"type": "par", "value": "("})
         elif token['type'] == 'delimiter':
-            result_tokens.append({"type": "delimiter", "value": "\n"})
+            result_tokens.append({"type": "delimiter", "value": ";"})
         else:
             result_tokens.append({**token, "value": matched_string})
 
@@ -408,3 +425,18 @@ def scanner(content):
     )
 
     return result_tokens
+
+
+# for i in scanner("""
+#
+# a := 4 + 3;
+# b := a ^ 2;
+#
+# if (a){
+#     print(a);
+# }else{
+#     print(b * a);
+# }
+#
+# """):
+#     print(i)
