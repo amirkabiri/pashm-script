@@ -27,21 +27,62 @@ class Actions:
         self.code.append(['=', value, None, variable])
 
     def action_add(self, token):
-        operand_a = self.stack.pop()
         operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
         temp_index = self.add_temp(None)
         destination = ['temp', temp_index]
 
         self.code.append(['+', operand_a, operand_b, destination])
         self.stack.append(destination)
 
-    def action_mult(self, token):
-        operand_a = self.stack.pop()
+    def action_minus(self, token):
         operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['-', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_multiply(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
         temp_index = self.add_temp(None)
         destination = ['temp', temp_index]
 
         self.code.append(['*', operand_a, operand_b, destination])
         self.stack.append(destination)
 
+    def action_divide(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
 
+        self.code.append(['/', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_save(self, token):
+        self.stack.append(['save', len(self.code)])
+        self.code.append(['NOP', None, None, None])
+
+    def action_label(self, token):
+        self.stack.append(['label', len(self.code)])
+
+    def action_if(self, token):
+        index = self.stack.pop()[1]
+        self.code[index] = ['JMPF', self.stack.pop(), ['code', len(self.code)], None]
+
+    def action_while(self, token):
+        save = self.stack.pop()
+        expression = self.stack.pop()
+        label = self.stack.pop()
+
+        self.code[save[1]] = ['JMPF', expression, ['code', len(self.code) + 1], None]
+        self.code.append(['JMP', ['code', label[1]], None, None])
+
+    def action_do_while(self, token):
+        expression = self.stack.pop()
+        label = self.stack.pop()
+
+        self.code.append(['JMPT', expression, ['code', label[1]], None])

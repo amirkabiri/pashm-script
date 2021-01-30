@@ -1,0 +1,38 @@
+START -> STATEMENTS
+
+STATEMENTS -> STATEMENT STATEMENTS
+STATEMENTS -> λ
+
+STATEMENT -> if ( EXPRESSION @save ) BLOCK @if
+STATEMENT -> if ( EXPRESSION @save ) BLOCK @if @save else BLOCK @else
+STATEMENT -> while( EXPRESSION @save ) BLOCK @while
+STATEMENT -> do BLOCK while ( EXPRESSION @do_while )
+STATEMENT -> variable = MATH @assign delimiter
+STATEMENT -> FUNCTION_CALL
+
+FUNCTION_CALL -> @function function ( FUNCTION_CALL_PARAMS ) @call
+FUNCTION_CALL_PARAMS -> TERM params_delimiter FUNCTION_CALL_PARAMS
+FUNCTION_CALL_PARAMS -> TERM
+FUNCTION_CALL_PARAMS -> λ
+
+BLOCK -> STATEMENT
+BLOCK -> { STATEMENTS }
+
+TERM -> @variable variable
+TERM -> @number number
+
+EXPRESSION -> MATH
+
+MATH -> A
+A -> A + B @add
+A -> A - B @minus
+A -> B
+B -> B * C @multiply
+B -> B / C @divide
+B -> C
+C -> - C @invert
+C -> D
+D -> E ^ D @pow
+D -> E
+E -> TERM
+E -> ( MATH )

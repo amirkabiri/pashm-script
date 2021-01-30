@@ -1,0 +1,42 @@
+START -> STATEMENTS
+
+STATEMENTS -> STATEMENT STATEMENTS
+STATEMENTS -> λ
+
+STATEMENT -> if ( EXPRESSION @save ) BLOCK @if
+STATEMENT -> while( @label EXPRESSION @save ) BLOCK @while
+STATEMENT -> do BLOCK while ( EXPRESSION @do_while )
+STATEMENT -> variable := MATH @assign delimiter
+
+
+BLOCK -> STATEMENT
+BLOCK -> { STATEMENTS }
+
+TERM -> @variable variable
+TERM -> @number number
+
+EXPRESSION -> MATH
+
+MATH -> A
+
+A -> B A2
+A2 -> A1 A2
+A2 -> λ
+A1 -> + B @add
+A1 -> - B @minus
+
+B -> C B2
+B2 -> B1 B2
+B2 -> λ
+B1 -> * C @multiply
+B1 -> / C @divide
+
+C -> - C @invert
+C -> D
+
+D -> E D1
+D1 -> ^ D @pow
+D1 -> λ
+
+E -> TERM
+E -> ( MATH )

@@ -5,7 +5,7 @@ from compiler.helpers import unique_expressions
 
 
 class LL1:
-    def __init__(self, grammar: Grammar):
+    def __init__(self, grammar: Grammar, follow = None):
         productions = []
         for production in grammar.productions:
             productions.append([
@@ -23,7 +23,14 @@ class LL1:
         )
 
         self.first = self.fill_first()
-        self.follow = self.fill_follow()
+        # for i in self.first:
+        #     print(i, self.first[i])
+        # exit()
+
+        if follow is None:
+            self.follow = self.fill_follow()
+        else:
+            self.follow = follow
         self.table = self.fill_table()
 
     def fill_table(self):
