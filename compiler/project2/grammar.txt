@@ -7,12 +7,13 @@ STATEMENT -> if ( EXPRESSION @save ) BLOCK @if
 STATEMENT -> if ( EXPRESSION @save ) BLOCK @if @save else BLOCK @else
 STATEMENT -> while( @label EXPRESSION @save ) BLOCK @while
 STATEMENT -> do BLOCK while ( EXPRESSION @do_while )
-STATEMENT -> @variable variable := MATH delimiter @assign
-STATEMENT -> FUNCTION_CALL
+STATEMENT -> @variable variable := EXPRESSION delimiter @assign
+STATEMENT -> VOID_FUNCTION_CALL delimiter
 
+VOID_FUNCTION_CALL -> @function function ( FUNCTION_CALL_PARAMS ) @void_call
 FUNCTION_CALL -> @function function ( FUNCTION_CALL_PARAMS ) @call
-FUNCTION_CALL_PARAMS -> TERM params_delimiter FUNCTION_CALL_PARAMS
-FUNCTION_CALL_PARAMS -> TERM
+FUNCTION_CALL_PARAMS -> EXPRESSION params_delimiter FUNCTION_CALL_PARAMS
+FUNCTION_CALL_PARAMS -> EXPRESSION
 FUNCTION_CALL_PARAMS -> λ
 
 BLOCK -> STATEMENT
@@ -20,19 +21,42 @@ BLOCK -> { STATEMENTS }
 
 TERM -> @variable variable
 TERM -> @number number
+TERM -> FUNCTION_CALL
 
-EXPRESSION -> MATH
+EXPRESSION -> A
 
-MATH -> A
-A -> A + B @add
-A -> A - B @minus
+A -> A || B @or
 A -> B
-B -> B * C @multiply
-B -> B / C @divide
+
+B -> B && C @and
 B -> C
-C -> - C @invert
+
+C -> C != D @not_equal
+C -> C == D @equal
 C -> D
-D -> E ^ D @pow
+
+D -> D >= E @greater_than_and_equal
+D -> D > E @greater_than
+D -> D <= E @less_than_and_equal
+D -> D < E @less_than
 D -> E
-E -> TERM
-E -> ( MATH )
+
+E -> E - F @subtract
+E -> E + F @add
+E -> F
+
+F -> F * G @multiply
+F -> F / G @divide
+F -> F % G @modulo
+F -> G
+
+G -> H ^ G @pow
+G -> H
+
+H -> - H @unary_minus
+H -> + H @unary_plus
+H -> ! H @not
+H -> I
+
+I -> TERM
+I -> ( EXPRESSION )

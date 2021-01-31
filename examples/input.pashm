@@ -1,0 +1,6 @@
+number := input();
+number := int(number);
+
+m := number ^ 2;
+
+print(m);

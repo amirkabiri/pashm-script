@@ -1,6 +1,6 @@
-from compiler.grammar.expression import Variable, Terminal
+from compiler.grammar.expression import Variable, Terminal, Action
 from compiler.grammar.statements import Statements
-
+import json
 
 class Grammar:
     def __init__(self, variables: list, terminals: list, start: Variable, productions):
@@ -42,6 +42,27 @@ class Grammar:
             lambda item: str(item[0]) + ' -> ' + str(item[1]),
             self.value.items()
         ))
+
+    def export_for_node(self):
+        result = []
+
+        for variable, statement in self.productions:
+            right = []
+
+            for e in statement:
+                if isinstance(e, Variable):
+                    right.append(e.value)
+                elif isinstance(e, Terminal) and e.value == '':
+                    right.append(None)
+                elif isinstance(e, Terminal):
+                    right.append(e.value)
+
+            result.append({
+                "left": variable.value,
+                "right": right
+            })
+
+        return json.dumps(result)
 
 
 # class LL1:

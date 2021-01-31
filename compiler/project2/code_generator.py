@@ -5,6 +5,12 @@ class Actions:
         self.temp = []
         self.vars = {}
 
+    def before(self, action, token):
+        pass
+
+    def after(self, action, token):
+        pass
+
     def add_temp(self, value):
         self.temp.append(value)
         return len(self.temp) - 1
@@ -35,7 +41,7 @@ class Actions:
         self.code.append(['+', operand_a, operand_b, destination])
         self.stack.append(destination)
 
-    def action_minus(self, token):
+    def action_subtract(self, token):
         operand_b = self.stack.pop()
         operand_a = self.stack.pop()
         temp_index = self.add_temp(None)
@@ -101,6 +107,26 @@ class Actions:
 
     def action_call(self, token):
         count = 0
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        for i in range(len(self.stack) - 1, -1, -1):
+            head = self.stack[i]
+            if isinstance(head, list) and head[0] == 'function':
+                self.code.append(['CALL', head[1], count, destination])
+                break
+
+            self.code.append(['PARAM', head, None, None])
+            count += 1
+
+        for i in range(count + 1):
+            self.stack.pop()
+
+        self.stack.append(destination)
+
+    def action_void_call(self, token):
+        count = 0
+
         for i in range(len(self.stack) - 1, -1, -1):
             head = self.stack[i]
             if isinstance(head, list) and head[0] == 'function':
@@ -110,3 +136,110 @@ class Actions:
             self.code.append(['PARAM', head, None, None])
             count += 1
 
+        for i in range(count + 1):
+            self.stack.pop()
+
+    def action_not(self, token):
+        operand = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['!', operand, None, destination])
+        self.stack.append(destination)
+
+    def action_unary_minus(self, token):
+        operand = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['-', operand, None, destination])
+        self.stack.append(destination)
+
+    def action_unary_plus(self, token):
+        operand = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['+', operand, None, destination])
+        self.stack.append(destination)
+
+    def action_modulo(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['%', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_less_than(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['<', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_less_than_and_equal(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['<=', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_greater_than(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['>', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_greater_than_and_equal(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['>=', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_equal(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['==', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_not_equal(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['!=', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_and(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['&&', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
+    def action_or(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['||', operand_a, operand_b, destination])
+        self.stack.append(destination)

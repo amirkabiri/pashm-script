@@ -59,7 +59,7 @@ class LL1:
                     continue
 
                 if table[variable.value][terminal.value] != None:
-                    raise Exception('this grammar is not in LL1 form')
+                    raise Exception('this grammar is not in LL1 form', [variable, terminal])
 
                 table[variable.value][terminal.value] = i
 

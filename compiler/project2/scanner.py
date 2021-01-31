@@ -265,109 +265,170 @@ def build_delimiter_dfa():
     )
 
 
+def build_or_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [Symbol("|")],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol("|"), State('1')],
+            [State('1'), Symbol("|"), State('2')],
+        ]
+    )
+
+
+def build_and_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [Symbol("&")],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol("&"), State('1')],
+            [State('1'), Symbol("&"), State('2')],
+        ]
+    )
+
+
+def build_equal_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [Symbol("=")],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol("="), State('1')],
+            [State('1'), Symbol("="), State('2')],
+        ]
+    )
+
+
+def build_not_equal_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [Symbol("="), Symbol('!')],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol("!"), State('1')],
+            [State('1'), Symbol("="), State('2')],
+        ]
+    )
+
+
+def build_greater_than_and_equal_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [Symbol("="), Symbol('>')],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol(">"), State('1')],
+            [State('1'), Symbol("="), State('2')],
+        ]
+    )
+
+
+def build_less_than_and_equal_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(3)],
+        [Symbol("="), Symbol('<')],
+        State('0'),
+        [State('2')],
+        [
+            [State('0'), Symbol("<"), State('1')],
+            [State('1'), Symbol("="), State('2')],
+        ]
+    )
+
+
+def build_greater_than_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('>')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol(">"), State('1')],
+        ]
+    )
+
+
+def build_less_than_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('<')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol("<"), State('1')],
+        ]
+    )
+
+
+def build_modulo_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('%')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol('%'), State('1')],
+        ]
+    )
+
+
+def build_not_dfa():
+    return FiniteAutomata(
+        [State(str(i)) for i in range(2)],
+        [Symbol('!')],
+        State('0'),
+        [State('1')],
+        [
+            [State('0'), Symbol('!'), State('1')],
+        ]
+    )
+
+
 machines = [
-    {
-        "dfa": build_assign_dfa(),
-        "priority": 100,
-        "token": {"type": "operator"}
-    },
-    {
-        "dfa": build_multiply_dfa(),
-        "priority": 100,
-        "token": {"type": "operator"}
-    },
-    {
-        "dfa": build_divide_dfa(),
-        "priority": 100,
-        "token": {"type": "operator"}
-    },
-    {
-        "dfa": build_pow_dfa(),
-        "priority": 100,
-        "token": {"type": "operator"}
-    },
-    {
-        "dfa": build_add_dfa(),
-        "priority": 100,
-        "token": {"type": "operator"}
-    },
-    {
-        "dfa": build_minus_dfa(),
-        "priority": 100,
-        "token": {"type": "operator"}
-    },
+    {"dfa": build_assign_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_multiply_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_divide_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_pow_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_add_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_minus_dfa(), "priority": 100, "token": {"type": "operator"}},
 
-    {
-        "dfa": build_variable_dfa(),
-        "priority": 40,
-        "token": {"type": "variable"}
-    },
-    {
-        "dfa": build_number_dfa(),
-        "priority": 40,
-        "token": {"type": "number"}
-    },
+    {"dfa": build_variable_dfa(), "priority": 40, "token": {"type": "variable"}},
+    {"dfa": build_number_dfa(), "priority": 40, "token": {"type": "number"}},
 
-    {
-        "dfa": build_open_brace_dfa(),
-        "priority": 100,
-        "token": {"type": "brace"}
-    },
-    {
-        "dfa": build_close_brace_dfa(),
-        "priority": 100,
-        "token": {"type": "brace"}
-    },
+    {"dfa": build_open_brace_dfa(), "priority": 100, "token": {"type": "brace"}},
+    {"dfa": build_close_brace_dfa(), "priority": 100, "token": {"type": "brace"}},
 
-    {
-        "dfa": build_open_par_dfa(),
-        "priority": 100,
-        "token": {"type": "par"}
-    },
-    {
-        "dfa": build_close_par_dfa(),
-        "priority": 100,
-        "token": {"type": "par"}
-    },
+    {"dfa": build_open_par_dfa(), "priority": 100, "token": {"type": "par"}},
+    {"dfa": build_close_par_dfa(), "priority": 100, "token": {"type": "par"}},
 
-    {
-        "dfa": build_delimiter_dfa(),
-        "priority": 100,
-        "token": {"type": "delimiter"}
-    },
+    {"dfa": build_delimiter_dfa(), "priority": 100, "token": {"type": "delimiter"}},
 
-    {
-        "dfa": build_function_dfa(),
-        "priority": 70,
-        "token": {"type": "function"}
-    },
-    {
-        "dfa": build_params_delimiter_dfa(),
-        "priority": 100,
-        "token": {"type": "params_delimiter"}
-    },
+    {"dfa": build_function_dfa(), "priority": 70, "token": {"type": "function"}},
+    {"dfa": build_params_delimiter_dfa(), "priority": 100, "token": {"type": "params_delimiter"}},
 
-    {
-        "dfa": build_while_dfa(),
-        "priority": 80,
-        "token": {"type": "while"}
-    },
-    {
-        "dfa": build_do_dfa(),
-        "priority": 80,
-        "token": {"type": "do"}
-    },
+    {"dfa": build_while_dfa(), "priority": 80, "token": {"type": "while"}},
+    {"dfa": build_do_dfa(), "priority": 80, "token": {"type": "do"}},
 
-    {
-        "dfa": build_if_dfa(),
-        "priority": 80,
-        "token": {"type": "if"}
-    },
-    {
-        "dfa": build_else_dfa(),
-        "priority": 80,
-        "token": {"type": "else"}
-    },
+    {"dfa": build_if_dfa(), "priority": 80, "token": {"type": "if"}},
+    {"dfa": build_else_dfa(), "priority": 80, "token": {"type": "else"}},
+
+    {"dfa": build_or_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_and_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_equal_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_not_equal_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_greater_than_and_equal_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_less_than_and_equal_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_greater_than_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_less_than_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_modulo_dfa(), "priority": 100, "token": {"type": "operator"}},
+    {"dfa": build_not_dfa(), "priority": 100, "token": {"type": "operator"}},
 ]
 
 
