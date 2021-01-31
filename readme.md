@@ -20,7 +20,7 @@ run main.py:
 
 for running an example:
 
-`py main.py run exmaples/add.pashm`
+`py main.py run examples/add.pashm`
 
 for showing three-address code:
 
