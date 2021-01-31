@@ -3,24 +3,36 @@ from compiler.project2.parser import parser
 from compiler.project2.executer import executer
 
 tokens = scanner("""
-b := 1;
-a := 2;
+num := 4;
+fact := 1;
 
-while(a){
-    b := b + 1;
-    a := a - 1;
+while(num){
+    fact := fact * num;
+    num := num - 1;
 }
+
+print(fact)
 """)
-# for token in tokens:
-#     print(token)
+
+tokens = scanner("""
+
+num := 10;
+
+if(num - 10){
+    num := 1;
+}
+
+print(num)
+
+""")
 
 actions = parser(tokens)
 result = executer(actions)
 
-print('vars', result.vars)
-print('temp', result.temp)
-print('stack', result.stack)
-
+# print('vars', result.vars)
+# print('temp', result.temp)
+# print('stack', result.stack)
+#
 print('code')
 for i, code in enumerate(result.code):
     print(i, code)

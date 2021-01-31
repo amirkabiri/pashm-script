@@ -21,6 +21,8 @@ def executer(actions):
             set(code[3], get(code[1]) - get(code[2]))
         elif code[0] == '*':
             set(code[3], get(code[1]) * get(code[2]))
+        elif code[0] == '^':
+            set(code[3], get(code[1]) ** get(code[2]))
         elif code[0] == '/':
             set(code[3], get(code[1]) / get(code[2]))
         elif code[0] == '=':
@@ -36,6 +38,12 @@ def executer(actions):
             if not get(code[1]):
                 i = code[2][1]
                 continue
+        elif code[0] == 'CALL':
+            params = []
+            for j in range(i - 1, i - code[2] - 1, -1):
+                params.append(get(actions.code[j][1]))
+
+            eval(f'{ code[1] }({ ",".join([str(p) for p in params]) })')
 
         i += 1
 

@@ -426,17 +426,3 @@ def scanner(content):
 
     return result_tokens
 
-
-# for i in scanner("""
-#
-# a := 4 + 3;
-# b := a ^ 2;
-#
-# if (a){
-#     print(a);
-# }else{
-#     print(b * a);
-# }
-#
-# """):
-#     print(i)

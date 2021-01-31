@@ -118,6 +118,8 @@ grammar = Grammar(
         Variable('B'), Variable('B2'), Variable('B1'),
         Variable('C'), Variable('D'), Variable('D1'),
         Variable('E'), Variable('MATH'),
+
+        Variable('FUNCTION_CALL'), Variable('FUNCTION_CALL_PARAMS'), Variable('FUNCTION_CALL_PARAMS1'),
     ],
     [
         Terminal('if'), Terminal('('), Terminal(')'),
@@ -127,6 +129,8 @@ grammar = Grammar(
 
         Terminal('+'), Terminal('*'), Terminal('/'),
         Terminal('-'), Terminal('^'),
+
+        Terminal('function'), Terminal('params_delimiter'),
     ],
     Variable("START"),
     [
@@ -161,6 +165,15 @@ grammar = Grammar(
         [Variable('D1'), Statement([Terminal('')])],
         [Variable('E'), Statement([Variable('TERM')])],
         [Variable('E'), Statement([Terminal('('), Variable('MATH'), Terminal(')')])],
+
+
+        [Variable('STATEMENT'), Statement([Variable('FUNCTION_CALL')])],
+        [Variable('FUNCTION_CALL'), Statement([Action('function'), Terminal('function'), Terminal('('), Variable('FUNCTION_CALL_PARAMS'), Terminal(')'), Action('call')])],
+        [Variable('FUNCTION_CALL_PARAMS'), Statement([Variable('TERM'), Variable('FUNCTION_CALL_PARAMS1')])],
+        [Variable('FUNCTION_CALL_PARAMS1'), Statement([Terminal('params_delimiter'), Variable('FUNCTION_CALL_PARAMS')])],
+        [Variable('FUNCTION_CALL_PARAMS1'), Statement([Terminal('')])],
+        [Variable('FUNCTION_CALL_PARAMS'), Statement([Terminal('')])],
+
     ]
 )
 
@@ -192,6 +205,10 @@ def parser(tokens):
         'D1': [Terminal('*'), Terminal('/'), Terminal('+'), Terminal('-'), Terminal('delimiter'), Terminal(')')],
         'E': [Terminal('^'), Terminal('*'), Terminal('/'), Terminal('+'), Terminal('-'), Terminal('delimiter'), Terminal(')')],
         'MATH': [Terminal('delimiter'), Terminal(')')],
+
+        'FUNCTION_CALL': [Terminal('while'), Dollar(), Terminal('}'), Terminal('if'), Terminal('while'), Terminal('do'), Terminal('variable')],
+        'FUNCTION_CALL_PARAMS': [Terminal(')')],
+        'FUNCTION_CALL_PARAMS1': [Terminal(')')],
     })
     tokens = [{ "type": "end", "value": "$" }, *(tokens[::-1])]
     stack = [Dollar(), grammar.start]

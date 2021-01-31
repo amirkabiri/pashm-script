@@ -53,6 +53,15 @@ class Actions:
         self.code.append(['*', operand_a, operand_b, destination])
         self.stack.append(destination)
 
+    def action_pow(self, token):
+        operand_b = self.stack.pop()
+        operand_a = self.stack.pop()
+        temp_index = self.add_temp(None)
+        destination = ['temp', temp_index]
+
+        self.code.append(['^', operand_a, operand_b, destination])
+        self.stack.append(destination)
+
     def action_divide(self, token):
         operand_b = self.stack.pop()
         operand_a = self.stack.pop()
@@ -86,3 +95,18 @@ class Actions:
         label = self.stack.pop()
 
         self.code.append(['JMPT', expression, ['code', label[1]], None])
+
+    def action_function(self, token):
+        self.stack.append(['function', token['value']])
+
+    def action_call(self, token):
+        count = 0
+        for i in range(len(self.stack) - 1, -1, -1):
+            head = self.stack[i]
+            if isinstance(head, list) and head[0] == 'function':
+                self.code.append(['CALL', head[1], count, None])
+                break
+
+            self.code.append(['PARAM', head, None, None])
+            count += 1
+

@@ -5,9 +5,9 @@ STATEMENTS -> λ
 
 STATEMENT -> if ( EXPRESSION @save ) BLOCK @if
 STATEMENT -> if ( EXPRESSION @save ) BLOCK @if @save else BLOCK @else
-STATEMENT -> while( EXPRESSION @save ) BLOCK @while
+STATEMENT -> while( @label EXPRESSION @save ) BLOCK @while
 STATEMENT -> do BLOCK while ( EXPRESSION @do_while )
-STATEMENT -> variable = MATH @assign delimiter
+STATEMENT -> @variable variable := MATH delimiter @assign
 STATEMENT -> FUNCTION_CALL
 
 FUNCTION_CALL -> @function function ( FUNCTION_CALL_PARAMS ) @call

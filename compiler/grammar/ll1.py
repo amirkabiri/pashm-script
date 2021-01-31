@@ -23,6 +23,7 @@ class LL1:
         )
 
         self.first = self.fill_first()
+
         # for i in self.first:
         #     print(i, self.first[i])
         # exit()
