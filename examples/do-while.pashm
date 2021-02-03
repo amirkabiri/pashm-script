@@ -1,0 +1,7 @@
+number := 10;
+
+do{
+    print(number);
+
+    number := number - 1;
+}while(number > 0)
