@@ -28,4 +28,13 @@ if argv[1] == 'run':
         print('Pashmam: ' + str(e))
 elif argv[1] == 'code':
     for i, code in enumerate(actions.code):
-        print(i, code)
+        print(i, end='  ( ')
+        for i, item in enumerate(code):
+            if isinstance(item, list):
+                print(':'.join([str(i) for i in item]), end='')
+            if isinstance(item ,str):
+                print(item, end='')
+
+            if i != len(code) - 1:
+                print(end=' , ')
+        print(' ) ')
