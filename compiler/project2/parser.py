@@ -75,7 +75,7 @@ grammar = Grammar(
         [Variable('STATEMENTS'), Statement([Variable('STATEMENT'), Variable('STATEMENTS')])],
         [Variable('STATEMENTS'), Statement([Terminal('')])],
         [Variable('STATEMENT'), Statement([Terminal('while'), Terminal('('), Action('label'), Variable('EXPRESSION'), Action('save'), Terminal(')'), Variable('BLOCK'), Action('while')])],
-        [Variable('STATEMENT'), Statement([Terminal('do'), Variable('BLOCK'), Terminal('while'), Terminal('('), Variable('EXPRESSION'), Action('do_while'), Terminal(')')])],
+        [Variable('STATEMENT'), Statement([Action('label'), Terminal('do'), Variable('BLOCK'), Terminal('while'), Terminal('('), Variable('EXPRESSION'), Action('do_while'), Terminal(')')])],
         [Variable('STATEMENT'), Statement([Action('variable'), Terminal('variable'), Terminal(':='), Variable('EXPRESSION'), Terminal('delimiter'), Action('assign')])],
         [Variable('STATEMENT'), Statement([Variable('VOID_FUNCTION_CALL'), Terminal('delimiter')])],
         [Variable('STATEMENT'), Statement([Terminal('if'), Terminal('('), Variable('EXPRESSION'), Action('save'), Terminal(')'), Variable('BLOCK'), Action('if')])],

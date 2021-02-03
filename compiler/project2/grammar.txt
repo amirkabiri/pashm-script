@@ -6,7 +6,7 @@ STATEMENTS -> λ
 STATEMENT -> if ( EXPRESSION @save ) BLOCK @if
 STATEMENT -> if ( EXPRESSION @save ) BLOCK @if @save else BLOCK @else
 STATEMENT -> while( @label EXPRESSION @save ) BLOCK @while
-STATEMENT -> do BLOCK while ( EXPRESSION @do_while )
+STATEMENT -> @label do BLOCK while ( EXPRESSION @do_while )
 STATEMENT -> @variable variable := EXPRESSION delimiter @assign
 STATEMENT -> VOID_FUNCTION_CALL delimiter
 
