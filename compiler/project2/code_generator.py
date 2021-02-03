@@ -16,9 +16,10 @@ class Actions:
         return len(self.temp) - 1
 
     def action_number(self, token):
+        value = token['value']
         self.stack.append([
             'const',
-            int(token['value'])
+            float(value) if '.' in value else int(value)
         ])
 
     def action_variable(self, token):
